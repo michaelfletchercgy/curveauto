@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=supersecret99
+  web:
+    build: .
+    ports:
+      - "5050:5050"
+    restart: always
+    environment:
+     - DATABASE_URL=jdbc:postgresql://db/postgres
+     - DATABASE_USERNAME=postgres
+     - DATABASE_PASSWORD=supersecret99
+    depends_on:
+      - db

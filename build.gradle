@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.ratpack:ratpack-gradle:1.5.4"
+    }
+}
+
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+}
+
+apply plugin: "io.ratpack.ratpack-java"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    // This dependency is found on compile classpath of this component and consumers.
+    compile 'com.google.guava:guava:23.0'
+    compile 'org.hibernate:hibernate-core:5.3.1.Final'
+    compile 'org.postgresql:postgresql:42.2.2'
+
+    runtime "org.slf4j:slf4j-simple:1.7.25"
+
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = 'curveauto.Main'

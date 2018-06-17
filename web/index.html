@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+
+        <table id="cars">
+            <thead>
+            <tr>
+                <th>Vin</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="c in cars">
+                <td>
+                    {{c.vin}}
+                </td>
+                <td>
+                    {{c.carType.name}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </body>
+
+    <script src="index.js"></script>
+</html>
