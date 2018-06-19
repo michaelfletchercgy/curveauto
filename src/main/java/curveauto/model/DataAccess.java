@@ -3,14 +3,25 @@ package curveauto.model;
 import java.util.List;
 
 public interface DataAccess {
+    void commit();
+
+    void rollback();
+
+    void close();
 
     List<Car> getAllCars();
 
     Car save(Car car);
 
-    Car getCar(String id);
+    Car getCar(long id);
 
     Object deleteCar(long id);
 
-    void commit();
+    Object deleteMaintenanceType(long id);
+
+    MaintenanceType saveMaintenanceType(MaintenanceType maintenanceType);
+
+    MaintenanceType getMaintenanceType(long id);
+
+    List<MaintenanceType> getAllMaintenanceTypes();
 }

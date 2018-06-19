@@ -1,6 +1,7 @@
 package curveauto.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -15,6 +16,9 @@ public class Car {
     private int odometer;
     private Set<CarMaintenance> maintenance;
 
+    public Car() {
+        maintenance = new HashSet<>();
+    }
     @Id
     @GeneratedValue()
     public long getId() {

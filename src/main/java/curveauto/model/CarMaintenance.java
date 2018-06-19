@@ -1,14 +1,12 @@
 package curveauto.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="CAR_MAINTENANCE")
 public class CarMaintenance {
     private long id;
+    private MaintenanceType maintenanceType;
 
     @Id
     @GeneratedValue()
@@ -18,5 +16,14 @@ public class CarMaintenance {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @ManyToOne
+    public MaintenanceType getMaintenanceType() {
+        return maintenanceType;
+    }
+
+    public void setMaintenanceType(MaintenanceType maintenanceType) {
+        this.maintenanceType = maintenanceType;
     }
 }

@@ -15,12 +15,39 @@ public class HibernateDataAccess implements DataAccess {
         this.tx = session.beginTransaction();
     }
 
+    @Override
+    public void commit() {
+        tx.commit();
+
+        close();
+    }
+
+    @Override
+    public void rollback() {
+        tx.rollback();
+
+        close();
+    }
+
+    @Override
+    public void close() {
+        if (session != null) {
+            session.close();
+        }
+
+        // This is just to ensure that the session is not used again.  Any further use would fail.
+        session = null;
+        tx = null;
+    }
+
     public void createTestData() {
         // Maintenance
         MaintenanceType oilChange = new MaintenanceType();
+        oilChange.setName("Oil Change");
         session.save(oilChange);
 
         MaintenanceType tireRotation = new MaintenanceType();
+        tireRotation.setName("Tire Rotation");
         session.save(tireRotation);
 
         // Electric Car
@@ -82,23 +109,37 @@ public class HibernateDataAccess implements DataAccess {
     }
 
     @Override
-    public Car getCar(String id) {
-        return session.get(Car.class, Long.parseLong(id));
+    public Car getCar(long id) {
+        return session.get(Car.class, id);
     }
 
     @Override
     public Object deleteCar(long id) {
-        Car car = session.load(Car.class, Long.valueOf(id));
+        Car car = session.load(Car.class, id);
         session.delete(car);
         return new Object();
     }
 
     @Override
-    public void commit() {
-        tx.commit();
+    public Object deleteMaintenanceType(long id) {
+        MaintenanceType mt = session.load(MaintenanceType.class, id);
+        session.delete(mt);
+        return new Object();
+    }
 
-        // This is just to ensure that the session is not used again.  Any further use would fail.
-        session = null;
-        tx = null;
+    @Override
+    public MaintenanceType saveMaintenanceType(MaintenanceType maintenanceType) {
+        session.saveOrUpdate(maintenanceType);
+        return maintenanceType;
+    }
+
+    @Override
+    public MaintenanceType getMaintenanceType(long id) {
+        return session.get(MaintenanceType.class, id);
+    }
+
+    @Override
+    public List<MaintenanceType> getAllMaintenanceTypes() {
+        return session.createQuery("from MaintenanceType").list();
     }
 }
