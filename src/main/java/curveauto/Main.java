@@ -1,5 +1,7 @@
 package curveauto;
 
+import curveauto.da.HibernateDataAccessFactory;
+
 public class Main {
     public static void main(String[] args) throws Exception {
         HibernateDataAccessFactory dataAccessFactory = new HibernateDataAccessFactory();

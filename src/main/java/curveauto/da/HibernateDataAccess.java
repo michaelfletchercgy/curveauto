@@ -1,16 +1,17 @@
-package curveauto;
+package curveauto.da;
 
 import curveauto.model.*;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
 public class HibernateDataAccess implements DataAccess {
-    private Session session;
+    private StatelessSession session;
     private Transaction tx;
 
-    public HibernateDataAccess(Session session) {
+    public HibernateDataAccess(StatelessSession session) {
         this.session = session;
         this.tx = session.beginTransaction();
     }
@@ -97,6 +98,11 @@ public class HibernateDataAccess implements DataAccess {
         myTruck.setModel("RAM 1500");
         myTruck.setOdometer(303400);
         myTruck.setYear(2004);
+
+        CarMaintenance myTruckOil = new CarMaintenance();
+        session.save(myTruckOil);
+        myTruckOil.setMaintenanceType(oilChange);
+        myTruck.getMaintenance().add(myTruckOil);
         session.save(myTruck);
 
     }
@@ -108,7 +114,7 @@ public class HibernateDataAccess implements DataAccess {
 
     @Override
     public Car save(Car car) {
-        session.save(car);
+        session.saveOrUpdate(car);
         return car;
     }
 

@@ -2,7 +2,7 @@ package curveauto;
 
 import curveauto.model.Car;
 import curveauto.model.CarMaintenance;
-import curveauto.model.DataAccess;
+import curveauto.da.DataAccess;
 import curveauto.model.MaintenanceType;
 
 import java.util.List;

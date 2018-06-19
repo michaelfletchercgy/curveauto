@@ -1,6 +1,4 @@
-package curveauto;
-
-import curveauto.model.DataAccess;
+package curveauto.da;
 
 public interface DataAccessFactory {
     public DataAccess create();

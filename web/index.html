@@ -3,73 +3,55 @@
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
         <link rel="stylesheet" href="index.css" />
         <meta charset="UTF-8">
+
+        <script type="text/x-template" id="car-panel-template">
+            <div style="border: solid 1px black; margin: 1em; padding: 1em;">
+                <template v-if="editing">
+                    <p>
+                        <select name="carType" id="carType" v-model="carTypeId" required>
+                            <option v-for="ct in carTypes" :value="ct.id" >{{ct.name}}</option>
+                        </select>
+                    </p>
+
+                    <p>
+                        Vin: <input type="text" name = "vin" v-model="vin" />
+                    </p>
+
+                    <p>
+                        Odometer: <input type="number" name = "odometer" v-model="odometer" />
+                    </p>
+
+                    <button @click="saveCar()">Save</button>
+                </template>
+                <template v-else>
+                    <p>Car Type: {{car.carType.name}}</p>
+                    <p>Vin: {{car.vin}}</p>
+                    <p>Make: {{car.make}}</p>
+                    <p>Model: {{car.model}}</p>
+                    <p>Year: {{car.year}}</p>
+                    <p>Odometer: {{car.odometer}}</p>
+
+                    <p>Scheduled Maintenance:</p>
+                    <ul>
+                        <li v-for="m in car.maintenance">{{m.maintenanceType.name}}</li>
+                    </ul>
+
+                    <button @click="editCar()">Edit</button>
+
+                    <button @click="deleteCar(car)">Delete</button> <span class="hide">{{car.id}}</span>
+                </template>
+
+            </div>
+        </script>
     </head>
     <body>
+        <div id="cars">
+            <div v-for="c in cars" :key="c.id" >
+                <car-panel v-bind:car="c" @refresh="fetchData()"></car-panel>
+            </div>
 
-        <table id="cars">
-            <thead>
-            <tr>
-                <th>Type</th>
-                <th>Vin</th>
-                <th>Make</th>
-                <th>Model</th>
-                <th>Year</th>
-                <th>Odometer</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="c in cars">
-                <td>
-                    {{c.carType.name}}
-                </td>
-                <td>
-                    {{c.vin}}
-                </td>
-                <td>
-                    {{c.make}}
-                </td>
-                <td>
-                    {{c.model}}
-                </td>
-                <td>
-                    {{c.year}}
-                </td>
-                <td>
-                    {{c.odometer}}
-                </td>
-                <td>
-                    <button @click="deleteCar(c)">x</button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <select name="carType" id="carType" v-model="carType">
-                        <option v-for="ct in carTypes" :value="ct.id">{{ct.name}}</option>
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name = "vin" v-model="carVin" />
-                </td>
-                <td>
-                    <input type="text" name = "make" v-model="carMake"/>
-                </td>
-                <td>
-                    <input type="text" name = "model" v-model="carModel"/>
-                </td>
-                <td>
-                    <input type="text" name = "year" v-model="carYear"/>
-                </td>
-                <td>
-                    <input type="text" name = "odometer" v-model="carOdometer"/>
-                </td>
-                <td>
-                    <button @click="save()">Save</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
+            <button @click="newCar()">New Car</button>
+        </div>
     </body>
 
     <script src="index.js"></script>

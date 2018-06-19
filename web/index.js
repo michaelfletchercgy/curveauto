@@ -1,72 +1,47 @@
-var cars = new Vue({
-
-    el: '#cars',
-
-    data: {
-        cars: null,
-        carTypes: null,
-
-        carType: null,
-        carVin: null,
-        carMake: null,
-        carModel: null,
-        carYear: null,
-        carOdometer: null
+Vue.component('car-panel', {
+    props: ['car'],
+    data: function () {
+        return {
+            editing: false,
+            carTypes: null,
+            carType: null,
+            vin: null,
+            make: null,
+            model: null,
+            year: null,
+            odometer: null
+        };
     },
-
     created: function () {
-        this.fetchData();
         this.fetchCarTypes();
     },
-
     methods: {
-        fetchCarTypes: function() {
+
+        editCar: function() {
+            this.editing = true;
+            this.carTypeId = this.car.carType.id;
+            this.vin = this.car.vin;
+            this.make = this.car.make;
+            this.model = this.car.model;
+            this.year = this.car.year;
+            this.odometer = this.car.odometer;
+        },
+
+        saveCar: function() {
+            this.editing = false;
+
             var xhr = new XMLHttpRequest();
             var self = this;
-            xhr.open('GET', 'api/carTypes');
-            xhr.onload = function () {
-                self.carTypes = JSON.parse(xhr.responseText);
+
+            if (this.car.id == 0) {
+                xhr.open('PUT', 'api/cars');
+            } else {
+                xhr.open('POST', 'api/cars/' + this.car.id);
             }
-            xhr.send();
-        },
 
-        fetchData: function () {
-            var xhr = new XMLHttpRequest();
-            var self = this;
-            xhr.open('GET', 'api/cars');
-            xhr.onload = function () {
-                self.cars = JSON.parse(xhr.responseText);
-            }
-            xhr.send();
-        },
-
-        deleteCar: function(car) {
-            var xhr = new XMLHttpRequest();
-            var self = this;
-            xhr.open('DELETE', 'api/cars/' + car.id);
-            xhr.onload = function () {
-                self.fetchData();
-            }
-            xhr.send();
-        },
-
-        saveNewCar: function() {
-            console.log("saving new car");
-        },
-
-        save: function() {
-            var xhr = new XMLHttpRequest();
-            var self = this;
-            xhr.open('PUT', 'api/cars');
             xhr.setRequestHeader('Content-type','application/json');
             xhr.onload = function () {
-                this.carVin = null;
-                this.carMake = null;
-                this.carModel = null;
-                this.carYear = null;
-                this.carOdometer = null;
-
-                self.fetchData();
+                self.$emit('refresh');
             }
             var carTypeEl = document.getElementById("carType");
 
@@ -76,21 +51,69 @@ var cars = new Vue({
                 var carType = document.getElementById("carType").selectedOptions[0].value;
 
                 var post = {
-                    id: 0,
+                    id: this.car.id,
                     carType: {
                         id: parseInt(carType)
                     },
-                    vin: this.carVin,
-                    make: this.carMake,
-                    model: this.carModel,
-                    year: this.carYear,
-                    odometer: this.carOdometer
+                    vin: this.vin,
+                    make: this.make,
+                    model: this.model,
+                    year: this.year,
+                    odometer: this.odometer
                 };
 
                 var json = JSON.stringify(post)
                 xhr.send(json);
             }
+        },
 
+        deleteCar: function(car) {
+
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('DELETE', 'api/cars/' + car.id);
+            xhr.onload = function () {
+                self.$emit('refresh');
+            }
+            xhr.send();
+        },
+
+        fetchCarTypes: function() {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('GET', 'api/carTypes');
+            xhr.onload = function () {
+                self.carTypes = JSON.parse(xhr.responseText);
+            }
+            xhr.send();
+        },
+    },
+    template: '#car-panel-template'
+});
+
+var vm = new Vue({
+
+    el: '#cars',
+
+    data: {
+        cars: null,
+    },
+    created: function () {
+        this.fetchData();
+    },
+
+    methods: {
+        fetchData: function () {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('GET', 'api/cars');
+            xhr.onload = function () {
+                self.cars = JSON.parse(xhr.responseText);
+            }
+            xhr.send();
+        },
+        newCar: function() {
+            this.cars.push({ id: 0, carType: {}});
         }
     }
-})
+});

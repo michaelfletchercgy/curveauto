@@ -2,13 +2,15 @@ package curveauto.integrationtests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import curveauto.*;
+import curveauto.da.DataAccessFactory;
+import curveauto.da.HibernateDataAccessFactory;
 import org.junit.*;
 import ratpack.http.client.ReceivedResponse;
-import ratpack.jackson.internal.JsonParser;
 import ratpack.test.ServerBackedApplicationUnderTest;
 import ratpack.test.http.TestHttpClient;
+
+import java.io.IOException;
 
 /**
  * This set of integration tests ensures that our basic list/get/post/put/delete api's are working correctly.  They
@@ -102,7 +104,7 @@ public class HttpTests {
         String putResponseBody = putResponse.getBody().getText();
 
 
-        long id = JsonUtils.toJsonNode(putResponseBody).get("id").asLong();
+        long id = toJsonNode(putResponseBody).get("id").asLong();
 
         ReceivedResponse getResponse = TestHttpClient.testHttpClient(ServerBackedApplicationUnderTest.of(server.getServer()))
                 .get("api/maintenanceTypes/" + id);
@@ -112,6 +114,10 @@ public class HttpTests {
         TestHttpClient.testHttpClient(ServerBackedApplicationUnderTest.of(server.getServer()))
                 .deleteText("api/maintenanceTypes/" + id);
 
+    }
+
+    private static JsonNode toJsonNode(String str) throws IOException {
+        return new ObjectMapper().readTree(str);
     }
 
 }

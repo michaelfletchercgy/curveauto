@@ -1,7 +1,8 @@
 package curveauto;
 
+import curveauto.da.DataAccessFactory;
 import curveauto.model.Car;
-import curveauto.model.DataAccess;
+import curveauto.da.DataAccess;
 import curveauto.model.MaintenanceType;
 import ratpack.handling.Context;
 import ratpack.server.RatpackServer;
@@ -125,5 +126,11 @@ public class HttpServer {
      */
     public RatpackServer getServer() {
         return server;
+    }
+
+    @FunctionalInterface
+    interface TriFunction<A,B,C,R> {
+
+        R apply(A a, B b, C c);
     }
 }

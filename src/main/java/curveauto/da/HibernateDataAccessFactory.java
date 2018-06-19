@@ -1,4 +1,4 @@
-package curveauto;
+package curveauto.da;
 
 import curveauto.model.*;
 import org.hibernate.SessionFactory;
@@ -42,12 +42,12 @@ public class HibernateDataAccessFactory implements DataAccessFactory {
         sessionFactory = configuration.buildSessionFactory();
 
 
-        HibernateDataAccess testData = new HibernateDataAccess(sessionFactory.openSession());
+        HibernateDataAccess testData = new HibernateDataAccess(sessionFactory.openStatelessSession());
         testData.createTestData();
         testData.commit();
     }
     @Override
     public DataAccess create() {
-        return new HibernateDataAccess(sessionFactory.openSession());
+        return new HibernateDataAccess(sessionFactory.openStatelessSession());
     }
 }

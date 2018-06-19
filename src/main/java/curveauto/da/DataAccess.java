@@ -1,4 +1,8 @@
-package curveauto.model;
+package curveauto.da;
+
+import curveauto.model.Car;
+import curveauto.model.CarType;
+import curveauto.model.MaintenanceType;
 
 import java.util.List;
 

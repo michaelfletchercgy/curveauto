@@ -1,8 +1,13 @@
-package curveauto;
+package curveauto.unittests;
 
+import curveauto.API;
+import curveauto.da.DataAccess;
+import curveauto.da.DataAccessFactory;
 import curveauto.model.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
 
 public class APITests {
     @Test()
@@ -37,6 +42,9 @@ public class APITests {
 
     @Test()
     public void testSaveCarWithBadWithMaintenance() {
+        CarType electric = new CarType();
+        electric.setName("Electric");
+
         DataAccess da = ((DataAccessFactory) () -> new DefaultDataAccess() {
             @Override
             public Car getCar(long id) {
@@ -52,6 +60,11 @@ public class APITests {
 
                 return super.getCar(id);
             }
+
+            @Override
+            public CarType getCarType(long id) {
+                return electric;
+            }
         }).create();
 
         API api = new API();
@@ -62,8 +75,7 @@ public class APITests {
         MaintenanceType tires = new MaintenanceType();
         oil.setName("Tire Change");
 
-        CarType electric = new CarType();
-        electric.setName("Electric");
+
 
         CarTypeMaintenance ctm = new CarTypeMaintenance();
         ctm.setMaintenanceType(tires);
@@ -89,6 +101,73 @@ public class APITests {
         } catch(Exception e) {
             Assert.assertEquals(RuntimeException.class, e.getClass());
             Assert.assertEquals("A Electric may not have a Tire Change maintenance type.", e.getMessage());
+        }
+    }
+
+    public static class DefaultDataAccess implements DataAccess {
+        @Override
+        public void commit() {
+
+        }
+
+        @Override
+        public void rollback() {
+
+        }
+
+        @Override
+        public void close() {
+
+        }
+
+        @Override
+        public List<Car> getAllCars() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Car save(Car car) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Car getCar(long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Object deleteCar(long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Object deleteMaintenanceType(long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public MaintenanceType saveMaintenanceType(MaintenanceType maintenanceType) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public MaintenanceType getMaintenanceType(long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<MaintenanceType> getAllMaintenanceTypes() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<Car> getAllCarsTypes() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public CarType getCarType(long id) {
+            throw new UnsupportedOperationException();
         }
     }
 }
