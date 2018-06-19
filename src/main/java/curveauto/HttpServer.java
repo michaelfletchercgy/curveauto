@@ -37,6 +37,9 @@ public class HttpServer {
                                 .post(() -> genericScopedPost(ctx,ctx.getPathTokens().get("id"), Car.class, api::carsPost))
                                 .delete(() -> genericScopedDelete(ctx, ctx.getPathTokens().get("id"), api::carsDelete)))
                         )
+                        .path("api/carTypes", ctx -> ctx.byMethod(m -> m
+                                .get(() -> genericList(ctx, api::carsTypeList)))
+                        )
                         .path("api/maintenanceTypes", ctx -> ctx.byMethod(m -> m
                                 .get(() -> genericList(ctx, api::maintenanceTypesList))
                                 .put(() -> genericPut(ctx, MaintenanceType.class, api::maintenanceTypesPut)))

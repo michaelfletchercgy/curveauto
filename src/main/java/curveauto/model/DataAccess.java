@@ -24,4 +24,8 @@ public interface DataAccess {
     MaintenanceType getMaintenanceType(long id);
 
     List<MaintenanceType> getAllMaintenanceTypes();
+
+    List<Car> getAllCarsTypes();
+
+    CarType getCarType(long id);
 }

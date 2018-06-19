@@ -1,6 +1,7 @@
 <html>
     <head>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <link rel="stylesheet" href="index.css" />
         <meta charset="UTF-8">
     </head>
     <body>
@@ -8,17 +9,62 @@
         <table id="cars">
             <thead>
             <tr>
-                <th>Vin</th>
                 <th>Type</th>
+                <th>Vin</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Odometer</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="c in cars">
                 <td>
+                    {{c.carType.name}}
+                </td>
+                <td>
                     {{c.vin}}
                 </td>
                 <td>
-                    {{c.carType.name}}
+                    {{c.make}}
+                </td>
+                <td>
+                    {{c.model}}
+                </td>
+                <td>
+                    {{c.year}}
+                </td>
+                <td>
+                    {{c.odometer}}
+                </td>
+                <td>
+                    <button @click="deleteCar(c)">x</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select name="carType" id="carType" v-model="carType">
+                        <option v-for="ct in carTypes" :value="ct.id">{{ct.name}}</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" name = "vin" v-model="carVin" />
+                </td>
+                <td>
+                    <input type="text" name = "make" v-model="carMake"/>
+                </td>
+                <td>
+                    <input type="text" name = "model" v-model="carModel"/>
+                </td>
+                <td>
+                    <input type="text" name = "year" v-model="carYear"/>
+                </td>
+                <td>
+                    <input type="text" name = "odometer" v-model="carOdometer"/>
+                </td>
+                <td>
+                    <button @click="save()">Save</button>
                 </td>
             </tr>
             </tbody>

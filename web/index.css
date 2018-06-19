@@ -1,0 +1,12 @@
+body {
+    font-family: sans;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+td, th {
+    border: solid 1px black;
+}

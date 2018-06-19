@@ -1,6 +1,7 @@
 package curveauto;
 
 import curveauto.model.Car;
+import curveauto.model.CarType;
 import curveauto.model.DataAccess;
 import curveauto.model.MaintenanceType;
 
@@ -60,6 +61,16 @@ public class DefaultDataAccess implements DataAccess {
 
     @Override
     public List<MaintenanceType> getAllMaintenanceTypes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<Car> getAllCarsTypes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CarType getCarType(long id) {
         throw new UnsupportedOperationException();
     }
 }

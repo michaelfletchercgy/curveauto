@@ -93,6 +93,10 @@ public class HibernateDataAccess implements DataAccess {
         Car myTruck = new Car();
         myTruck.setVin("1234567890");
         myTruck.setCarType(diesel);
+        myTruck.setMake("Dodge");
+        myTruck.setModel("RAM 1500");
+        myTruck.setOdometer(303400);
+        myTruck.setYear(2004);
         session.save(myTruck);
 
     }
@@ -141,5 +145,15 @@ public class HibernateDataAccess implements DataAccess {
     @Override
     public List<MaintenanceType> getAllMaintenanceTypes() {
         return session.createQuery("from MaintenanceType").list();
+    }
+
+    @Override
+    public List<Car> getAllCarsTypes() {
+        return session.createQuery("from CarType").list();
+    }
+
+    @Override
+    public CarType getCarType(long id) {
+        return session.get(CarType.class, id);
     }
 }

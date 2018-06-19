@@ -88,7 +88,7 @@ public class APITests {
             Assert.fail();
         } catch(Exception e) {
             Assert.assertEquals(RuntimeException.class, e.getClass());
-            Assert.assertEquals("bad", e.getMessage());
+            Assert.assertEquals("A Electric may not have a Tire Change maintenance type.", e.getMessage());
         }
     }
 }

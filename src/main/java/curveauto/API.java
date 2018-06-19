@@ -14,6 +14,10 @@ public class API {
 
     }
 
+    public List<Car> carsTypeList(DataAccess da) {
+        return da.getAllCarsTypes();
+    }
+
     public List<Car> carsList(DataAccess da) {
         return da.getAllCars();
     }
@@ -34,6 +38,8 @@ public class API {
 
     public Car carsPost(String id, Car car, DataAccess da) {
         car.setId(Long.valueOf(id));
+
+        car.setCarType(da.getCarType(car.getCarType().getId()));
 
         validateCar(car);
 
