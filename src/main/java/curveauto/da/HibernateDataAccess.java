@@ -4,14 +4,17 @@ import curveauto.model.*;
 import org.hibernate.Session;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class HibernateDataAccess implements DataAccess {
-    private StatelessSession session;
+    private Session session;
     private Transaction tx;
 
-    public HibernateDataAccess(StatelessSession session) {
+    public HibernateDataAccess(Session session) {
         this.session = session;
         this.tx = session.beginTransaction();
     }
@@ -98,22 +101,23 @@ public class HibernateDataAccess implements DataAccess {
         myTruck.setModel("RAM 1500");
         myTruck.setOdometer(303400);
         myTruck.setYear(2004);
+        session.save(myTruck);
 
         CarMaintenance myTruckOil = new CarMaintenance();
-        session.save(myTruckOil);
         myTruckOil.setMaintenanceType(oilChange);
-        myTruck.getMaintenance().add(myTruckOil);
-        session.save(myTruck);
+        myTruckOil.setCar(myTruck);
+        myTruckOil.setOdometer(100000);
+        session.save(myTruckOil);
 
     }
 
     @Override
     public List<Car> getAllCars() {
-        return session.createQuery("from Car").list();
+        return session.createQuery("from Car car order by car.id").list();
     }
 
     @Override
-    public Car save(Car car) {
+    public Car saveCar(Car car) {
         session.saveOrUpdate(car);
         return car;
     }
@@ -161,5 +165,26 @@ public class HibernateDataAccess implements DataAccess {
     @Override
     public CarType getCarType(long id) {
         return session.get(CarType.class, id);
+    }
+
+    @Override
+    public List<CarMaintenance> getCarMaintenance(long carId) {
+        Query q = session.createQuery("from CarMaintenance cm where cm.car.id = :carId");
+        q.setParameter("carId", carId);
+
+        return q.list();
+    }
+
+    @Override
+    public CarMaintenance saveCarMaintenance(CarMaintenance cm) {
+        session.saveOrUpdate(cm);
+
+        return cm;
+    }
+
+    @Override
+    public void deleteCarMaintenance(long carMaintenanceId) {
+        CarMaintenance cm = session.load(CarMaintenance.class, carMaintenanceId);
+        session.delete(cm);
     }
 }

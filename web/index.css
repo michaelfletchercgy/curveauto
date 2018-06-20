@@ -4,4 +4,10 @@ body {
 
 span.hide {
     color: grey;
+    font-size: smaller;
+}
+
+td {
+    vertical-align: top;
+    padding: 0.5em;
 }

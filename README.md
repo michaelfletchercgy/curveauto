@@ -8,6 +8,8 @@ been excessive for the development lead position but I don't want to take any ch
 I made a number of assumptions for this programming problem.  I'm documenting the key assumptions I made as different
 assumptions would have produced a different solution.
 
+ * This is an application that matters.  It requires a supportable storage backend.  I stayed away from making it too
+   much of a toy.  I tried to make my solution realistic.  After filling in a few more bits it is conceivable to put it into production.
  * I assumed that "CurveAuto" will grow 
  * The application would not need to scale excessively.  I assumed 100 GB of data would be an extremely large customer
    for this application.

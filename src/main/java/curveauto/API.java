@@ -27,9 +27,7 @@ public class API {
             throw new RuntimeException();
         }
 
-        validateCar(car);
-
-        return da.save(car);
+        return da.saveCar(car);
     }
 
     public Car carsGet(String id, DataAccess da) {
@@ -41,29 +39,13 @@ public class API {
 
         car.setCarType(da.getCarType(car.getCarType().getId()));
 
-        validateCar(car);
-
-        return da.save(car);
-    }
-
-    private void validateCar(Car car) {
-        Set<MaintenanceType> permittedMaintenanceTypes = car.getCarType().getCarTypeMaintenances().stream()
-                .map(ctm -> ctm.getMaintenanceType())
-                .collect(Collectors.toSet());
-
-        for (CarMaintenance mt : car.getMaintenance()) {
-            if (!permittedMaintenanceTypes.contains(mt.getMaintenanceType())) {
-                throw new RuntimeException("A " + car.getCarType().getName() + " may not have a " + mt.getMaintenanceType().getName() +
-                        " maintenance type.");
-            }
-        }
+        return da.saveCar(car);
     }
 
     public Object carsDelete(String id, DataAccess da) {
         long carId = Long.valueOf(id);
 
-        Car car = da.getCar(carId);
-        if (!car.getMaintenance().isEmpty()) {
+        if (!da.getCarMaintenance(carId).isEmpty()) {
             throw new RuntimeException("Car has outstanding maintenance.  It cannot be deleted.");
         }
 
@@ -94,5 +76,32 @@ public class API {
 
     public Object maintenanceTypesDelete(String id, DataAccess da) {
         return da.deleteMaintenanceType(Long.valueOf(id));
+    }
+
+    public CarMaintenance addCarMaintenance(CarMaintenance cm, DataAccess da) {
+        cm.setMaintenanceType(da.getMaintenanceType(cm.getMaintenanceType().getId()));
+        cm.setCar(da.getCar(cm.getCar().getId()));
+
+        Set<MaintenanceType> permittedMaintenanceTypes = cm.getCar().getCarType().getCarTypeMaintenances().stream()
+                .map(ctm -> ctm.getMaintenanceType())
+                .collect(Collectors.toSet());
+
+        if (!permittedMaintenanceTypes.contains(cm.getMaintenanceType())) {
+            throw new RuntimeException("A " + cm.getCar().getCarType().getName() + " may not have a " + cm.getMaintenanceType().getName() +
+                    " maintenance type.");
+        }
+
+
+        return da.saveCarMaintenance(cm);
+    }
+
+    public List<CarMaintenance> carMaintenanceList(String id, DataAccess da) {
+        long carId = Long.valueOf(id);
+        return da.getCarMaintenance(carId);
+    }
+
+    public void carMaintenanceDelete(String id, DataAccess da) {
+        long carId = Long.valueOf(id);
+        da.deleteCarMaintenance(carId);
     }
 }

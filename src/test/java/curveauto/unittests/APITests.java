@@ -7,25 +7,32 @@ import curveauto.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class APITests {
     @Test()
     public void testDeleteCarWithMaintenance() {
+        MaintenanceType mt = new MaintenanceType();
+        mt.setName("foo");
+
+        Car car = new Car();
+        car.setId(1);
+
+        CarMaintenance cm = new CarMaintenance();
+        cm.setCar(car);
+        cm.setMaintenanceType(mt);
+
         DataAccess da = ((DataAccessFactory) () -> new DefaultDataAccess() {
             @Override
             public Car getCar(long id) {
-                MaintenanceType mt = new MaintenanceType();
-                mt.setName("foo");
-
-                Car car = new Car();
-                car.setId(1);
-
-                CarMaintenance cm = new CarMaintenance();
-                cm.setMaintenanceType(mt);
-                car.getMaintenance().add(cm);
-
                 return car;
+            }
+
+            @Override
+            public List<CarMaintenance> getCarMaintenance(long carId) {
+                return Arrays.asList(cm);
             }
         }).create();
 
@@ -45,20 +52,22 @@ public class APITests {
         CarType electric = new CarType();
         electric.setName("Electric");
 
+        MaintenanceType oil = new MaintenanceType();
+        oil.setName("Oil Change");
+
+        Car myTesla = new Car();
+        myTesla.setCarType(electric);
+
         DataAccess da = ((DataAccessFactory) () -> new DefaultDataAccess() {
             @Override
             public Car getCar(long id) {
-                MaintenanceType mt = new MaintenanceType();
-                mt.setName("foo");
 
-                Car car = new Car();
-                car.setId(1);
+                return myTesla;
+            }
 
-                CarMaintenance cm = new CarMaintenance();
-                cm.setMaintenanceType(mt);
-                car.getMaintenance().add(cm);
-
-                return super.getCar(id);
+            @Override
+            public MaintenanceType getMaintenanceType(long id) {
+                return oil;
             }
 
             @Override
@@ -69,38 +78,18 @@ public class APITests {
 
         API api = new API();
 
-        MaintenanceType oil = new MaintenanceType();
-        oil.setName("Oil Change");
 
-        MaintenanceType tires = new MaintenanceType();
-        oil.setName("Tire Change");
-
-
-
-        CarTypeMaintenance ctm = new CarTypeMaintenance();
-        ctm.setMaintenanceType(tires);
-        electric.getCarTypeMaintenances().add(ctm);
-
-
-
-
-        Car myTesla = new Car();
-        myTesla.setCarType(electric);
 
         CarMaintenance myTeslaOilChange = new CarMaintenance();
         myTeslaOilChange.setMaintenanceType(oil);
-        myTesla.getMaintenance().add(myTeslaOilChange);
-
-        CarMaintenance myTeslaTireChange = new CarMaintenance();
-        myTeslaTireChange.setMaintenanceType(tires);
-        myTesla.getMaintenance().add(myTeslaTireChange);
+        myTeslaOilChange.setCar(myTesla);
 
         try {
-            api.carsPost("1", myTesla, da);
+            api.addCarMaintenance(myTeslaOilChange, da);
             Assert.fail();
         } catch(Exception e) {
             Assert.assertEquals(RuntimeException.class, e.getClass());
-            Assert.assertEquals("A Electric may not have a Tire Change maintenance type.", e.getMessage());
+            Assert.assertEquals("A Electric may not have a Oil Change maintenance type.", e.getMessage());
         }
     }
 
@@ -126,7 +115,7 @@ public class APITests {
         }
 
         @Override
-        public Car save(Car car) {
+        public Car saveCar(Car car) {
             throw new UnsupportedOperationException();
         }
 
@@ -167,6 +156,21 @@ public class APITests {
 
         @Override
         public CarType getCarType(long id) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public List<CarMaintenance> getCarMaintenance(long carId) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public CarMaintenance saveCarMaintenance(CarMaintenance cm) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void deleteCarMaintenance(long carId) {
             throw new UnsupportedOperationException();
         }
     }

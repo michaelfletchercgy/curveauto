@@ -14,11 +14,11 @@ public class Car {
     private String model;
     private int year;
     private int odometer;
-    private Set<CarMaintenance> maintenance;
 
     public Car() {
-        maintenance = new HashSet<>();
+
     }
+
     @Id
     @GeneratedValue()
     public long getId() {
@@ -76,14 +76,5 @@ public class Car {
 
     public void setOdometer(int odometer) {
         this.odometer = odometer;
-    }
-
-    @OneToMany(fetch=FetchType.EAGER)
-    public Set<CarMaintenance> getMaintenance() {
-        return maintenance;
-    }
-
-    public void setMaintenance(Set<CarMaintenance> maintenance) {
-        this.maintenance = maintenance;
     }
 }

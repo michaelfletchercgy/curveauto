@@ -1,9 +1,11 @@
 package curveauto.da;
 
 import curveauto.model.Car;
+import curveauto.model.CarMaintenance;
 import curveauto.model.CarType;
 import curveauto.model.MaintenanceType;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface DataAccess {
@@ -15,7 +17,7 @@ public interface DataAccess {
 
     List<Car> getAllCars();
 
-    Car save(Car car);
+    Car saveCar(Car car);
 
     Car getCar(long id);
 
@@ -32,4 +34,10 @@ public interface DataAccess {
     List<Car> getAllCarsTypes();
 
     CarType getCarType(long id);
+
+    List<CarMaintenance> getCarMaintenance(long carId);
+
+    CarMaintenance saveCarMaintenance(CarMaintenance cm);
+
+    void deleteCarMaintenance(long carId);
 }

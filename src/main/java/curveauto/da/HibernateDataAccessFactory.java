@@ -42,12 +42,12 @@ public class HibernateDataAccessFactory implements DataAccessFactory {
         sessionFactory = configuration.buildSessionFactory();
 
 
-        HibernateDataAccess testData = new HibernateDataAccess(sessionFactory.openStatelessSession());
+        HibernateDataAccess testData = new HibernateDataAccess(sessionFactory.openSession());
         testData.createTestData();
         testData.commit();
     }
     @Override
     public DataAccess create() {
-        return new HibernateDataAccess(sessionFactory.openStatelessSession());
+        return new HibernateDataAccess(sessionFactory.openSession());
     }
 }

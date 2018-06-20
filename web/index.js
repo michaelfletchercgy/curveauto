@@ -4,16 +4,22 @@ Vue.component('car-panel', {
         return {
             editing: false,
             carTypes: null,
+            maintenanceTypes: null,
             carType: null,
             vin: null,
             make: null,
             model: null,
             year: null,
-            odometer: null
+            odometer: null,
+            carMaintenance:null,
+            maintenanceType: null,
+            carTypeId: null
         };
     },
     created: function () {
         this.fetchCarTypes();
+        this.fetchMaintenanceTypes();
+        this.fetchCarMaintenance();
     },
     methods: {
 
@@ -43,17 +49,14 @@ Vue.component('car-panel', {
             xhr.onload = function () {
                 self.$emit('refresh');
             }
-            var carTypeEl = document.getElementById("carType");
 
-            if (carTypeEl.selectedOptions.length == 0) {
+            if (!this.carTypeId) {
                 alert("Please select a car type.");
             } else {
-                var carType = document.getElementById("carType").selectedOptions[0].value;
-
                 var post = {
                     id: this.car.id,
                     carType: {
-                        id: parseInt(carType)
+                        id: this.carTypeId
                     },
                     vin: this.vin,
                     make: this.make,
@@ -68,7 +71,6 @@ Vue.component('car-panel', {
         },
 
         deleteCar: function(car) {
-
             var xhr = new XMLHttpRequest();
             var self = this;
             xhr.open('DELETE', 'api/cars/' + car.id);
@@ -87,6 +89,69 @@ Vue.component('car-panel', {
             }
             xhr.send();
         },
+
+        fetchMaintenanceTypes: function() {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('GET', 'api/maintenanceTypes');
+            xhr.onload = function () {
+                self.maintenanceTypes = JSON.parse(xhr.responseText);
+            }
+            xhr.send();
+        },
+
+        fetchCarMaintenance: function() {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('GET', 'api/cars/' + this.car.id + '/maintenance');
+            xhr.onload = function () {
+                self.carMaintenance = JSON.parse(xhr.responseText);
+            }
+            xhr.send();
+        },
+
+        scheduleMaintenance: function(x) {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('PUT', 'api/carMaintenance');
+            xhr.setRequestHeader('Content-type','application/json');
+            xhr.onload = function () {
+                var result = JSON.parse(xhr.responseText);
+
+                if (result.error) {
+                    alert(result.error);
+                } else {
+                    self.fetchCarMaintenance();
+                }
+            };
+
+
+            if (!this.maintenanceType) {
+                alert('Please select a maintenance type.');
+                return;
+            }
+
+            var post = {
+                car: {
+                    id: this.car.id
+                },
+                maintenanceType: {
+                    id: this.maintenanceType
+                }
+            };
+
+            xhr.send(JSON.stringify(post));
+        },
+
+        deleteMaintenance: function(cm) {
+            var xhr = new XMLHttpRequest();
+            var self = this;
+            xhr.open('DELETE', 'api/carMaintenance/' + cm.id);
+            xhr.onload = function () {
+                self.fetchCarMaintenance();
+            }
+            xhr.send();
+        }
     },
     template: '#car-panel-template'
 });

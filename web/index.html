@@ -6,39 +6,81 @@
 
         <script type="text/x-template" id="car-panel-template">
             <div style="border: solid 1px black; margin: 1em; padding: 1em;">
-                <template v-if="editing">
-                    <p>
-                        <select name="carType" id="carType" v-model="carTypeId" required>
-                            <option v-for="ct in carTypes" :value="ct.id" >{{ct.name}}</option>
-                        </select>
-                    </p>
-
-                    <p>
-                        Vin: <input type="text" name = "vin" v-model="vin" />
-                    </p>
-
-                    <p>
-                        Odometer: <input type="number" name = "odometer" v-model="odometer" />
-                    </p>
+                <template v-if="editing || car.id==0">
+                    <table>
+                        <tr>
+                            <td>
+                                <p>
+                                    Car Type:
+                                    <select v-model="carTypeId" required>
+                                        <option v-for="ct in carTypes" :value="ct.id" >{{ct.name}}</option>
+                                    </select>
+                                </p>
+                                <p>
+                                    Vin: <input type="text" name = "vin" v-model="vin" />
+                                </p>
+                                <p>
+                                    Make: <input type="text" name = "make" v-model="make" />
+                                </p>
+                                <p>
+                                    Model: <input type="text" name = "model" v-model="model" />
+                                </p>
+                            </td>
+                            <td>
+                                <p>
+                                    Year: <input type="text" name = "year" v-model="year" />
+                                </p>
+                                <p>
+                                    Model: <input type="text" name = "odometer" v-model="odometer" />
+                                </p>
+                            </td>
+                            <td>
+                                <p>Scheduled Maintenance:</p>
+                                <ul>
+                                    <li v-for="m in carMaintenance">{{m.maintenanceType.name}}</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
 
                     <button @click="saveCar()">Save</button>
+
+                    <button v-if="car.id != 0" @click="deleteCar(car)">Delete</button>
+
                 </template>
                 <template v-else>
-                    <p>Car Type: {{car.carType.name}}</p>
-                    <p>Vin: {{car.vin}}</p>
-                    <p>Make: {{car.make}}</p>
-                    <p>Model: {{car.model}}</p>
-                    <p>Year: {{car.year}}</p>
-                    <p>Odometer: {{car.odometer}}</p>
+                    <table>
+                        <tr>
+                            <td>
+                                <p>Car Type: {{car.carType.name}}</p>
+                                <p>Vin: {{car.vin}}</p>
+                                <p>Make: {{car.make}}</p>
+                                <p>Model: {{car.model}}</p>
+                            </td>
+                            <td>
+                                <p>Year: {{car.year}}</p>
+                                <p>Odometer: {{car.odometer}}</p>
+                            </td>
+                            <td>
+                                <p>Scheduled Maintenance:</p>
+                                <ul>
+                                    <li v-for="m in carMaintenance">{{m.maintenanceType.name}} <button @click="deleteMaintenance(m)">X</button></li>
+                                </ul>
 
-                    <p>Scheduled Maintenance:</p>
-                    <ul>
-                        <li v-for="m in car.maintenance">{{m.maintenanceType.name}}</li>
-                    </ul>
+                                <p v-if="car.id != 0">
+                                    <select v-model="maintenanceType" required>
+                                        <option v-for="mt in maintenanceTypes" :value="mt.id" >{{mt.name}}</option>
+                                    </select>
+
+                                    <button @click="scheduleMaintenance(maintenanceType)">Schedule Maintenance</button>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
 
                     <button @click="editCar()">Edit</button>
 
-                    <button @click="deleteCar(car)">Delete</button> <span class="hide">{{car.id}}</span>
+                    <span class="hide">(id={{car.id}})</span>
                 </template>
 
             </div>
