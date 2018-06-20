@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * These test the key API functions that are more complicated that simple CRUD.
+ */
 public class APITests {
     @Test()
     public void testDeleteCarWithMaintenance() {
