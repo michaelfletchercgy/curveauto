@@ -8,18 +8,22 @@ been excessive for the development lead position but I don't want to take any ch
 The major assumptions I have made in this problem are
 
  * That I should demonstrate something that could go to production (at least in theory).  I didn't want it to be too
-   much of toy.  I used a real database and separated the HTTP, Business Logic and Data Access instead of combining
-   them.
+   much of toy.  I used a real database and separated the HTTP, Business Logic and Data Access layers.  It would have
+   been simpler to combine them but in real life projects get a lot more complicated and those layers help to keep
+   the code manageable and adaptable..
  * The API would need to be available to multiple devices.  I implemented this as an HTTP API that could be used by
    desktops, phones and tablets with multiple independent client implementations.
  * The application would not need to scale too big.  I am using a traditional database instead of Cassandra or some
    other NoSQL database.  An auto dealer would not have a very large amount of data.
+ * The library was more important than the UI for this problem.  I spent a lot more time on the library and getting a
+   design that I liked.  I have another project that demonstrates a better UI (https://theplanet.ca/birthdays-uat with
+   userid 'michaelfletcher' and password 'helloworld')
 
 I did cheat a bit in a few areas
 
- * The server will created the database (with test data) on startup.  In real life that would be too slow to manage
-   pretty quickly.
+ * The server recreates all the data on startup.  That would never work in real life.
  * There is no security.
+ * The UI looks pretty boring.
 
 ## Library / API Design
 
